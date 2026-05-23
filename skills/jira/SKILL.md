@@ -36,19 +36,18 @@ If the file does not exist — run setup automatically (see First-time Setup bel
 
 ## First-time Setup
 
-If not configured yet, run:
+If not configured, ask the user for:
+- API token (from https://id.atlassian.com/manage-profile/security/api-tokens)
+- Jira server URL (e.g. `https://adsensor-ru.atlassian.net`)
+- Login email
+- Default project key (e.g. `AS`)
+- Default board name (optional)
+
+Then run:
 
 ```bash
-node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js --token <TOKEN> --server <URL> --login <EMAIL> --project <KEY> [--board <BOARD>]
 ```
-
-This will ask for:
-- API token (from https://id.atlassian.com/manage-profile/security/api-tokens)
-- Then launches `jira init` which asks for:
-  - Jira server URL (e.g. `https://adsensor-ru.atlassian.net`)
-  - Login email
-  - Default project (e.g. `AS`)
-  - Default board
 
 Token is stored in `~/.pi-jira/.token` (isolated, not global env).
 Config is stored in `~/.config/.jira/.config.yml`

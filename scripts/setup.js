@@ -1,12 +1,14 @@
 /**
- * Interactive setup for pi-jira.
- * Prompts for Jira URL, email, API token.
+ * Non-interactive setup for pi-jira.
+ * Accepts all parameters via CLI flags.
  * Stores token in ~/.pi-jira/.token (isolated, not global env).
- * Then runs `jira init` with token injected via JIRA_API_TOKEN env var.
+ * Then runs `jira init` with flags and token injected via JIRA_API_TOKEN env var.
+ *
+ * Usage:
+ *   node setup.js --token <token> --server <url> --login <email> --project <key> --board <name>
  */
 const fs = require("fs");
 const path = require("path");
-const readline = require("readline");
 const { execSync } = require("child_process");
 
 const PI_JIRA_DIR = path.join(require("os").homedir(), ".pi-jira");
@@ -14,68 +16,64 @@ const TOKEN_FILE = path.join(PI_JIRA_DIR, ".token");
 const BIN_DIR = path.join(PI_JIRA_DIR, "bin");
 const JIRA_BIN = path.join(BIN_DIR, process.platform === "win32" ? "jira.exe" : "jira");
 
-function ask(rl, question, options = {}) {
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      resolve(answer.trim());
-    });
-  });
+function parseArgs(argv) {
+  const args = {};
+  for (let i = 2; i < argv.length; i++) {
+    if (argv[i].startsWith("--") && i + 1 < argv.length) {
+      const key = argv[i].slice(2);
+      args[key] = argv[++i];
+    }
+  }
+  return args;
 }
 
-async function main() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+function main() {
+  const args = parseArgs(process.argv);
 
   console.log("\n🔧 pi-jira setup\n");
 
   if (!fs.existsSync(JIRA_BIN)) {
     console.error(`❌ jira binary not found at ${JIRA_BIN}`);
     console.error("   Run: pi install git:github.com/Complead/pi-jira");
-    rl.close();
     process.exit(1);
   }
 
-  // Check if token already exists
-  if (fs.existsSync(TOKEN_FILE)) {
-    const overwrite = await ask(rl, "⚠️  Token already configured. Overwrite? (y/N): ");
-    if (overwrite.toLowerCase() !== "y") {
-      console.log("Keeping existing token.");
-      rl.close();
-      return;
-    }
-  }
-
-  console.log("Get your API token at: https://id.atlassian.com/manage-profile/security/api-tokens\n");
-
-  const token = await ask(rl, "API Token: ");
-
-  if (!token) {
-    console.error("❌ Token cannot be empty.");
-    rl.close();
+  // Validate required params
+  const required = ["token", "server", "login", "project"];
+  const missing = required.filter((k) => !args[k]);
+  if (missing.length > 0) {
+    console.error(`❌ Missing required flags: ${missing.map((k) => "--" + k).join(", ")}`);
+    console.error("\nUsage:");
+    console.error('  node setup.js --token <token> --server <url> --login <email> --project <key> [--board <name>]');
     process.exit(1);
   }
 
   // Save token
   fs.mkdirSync(PI_JIRA_DIR, { recursive: true });
-  fs.writeFileSync(TOKEN_FILE, token, { mode: 0o600 });
+  fs.writeFileSync(TOKEN_FILE, args.token, { mode: 0o600 });
   console.log(`✅ Token saved to ${TOKEN_FILE}\n`);
 
-  // Run jira init with token in env
-  console.log("Now running 'jira init'...\n");
+  // Build jira init command
+  let cmd = `"${JIRA_BIN}" init --installation cloud --force`;
+  cmd += ` --server "${args.server}"`;
+  cmd += ` --login "${args.login}"`;
+  cmd += ` --project "${args.project}"`;
+  if (args.board) {
+    cmd += ` --board "${args.board}"`;
+  }
+
+  console.log("Running 'jira init'...\n");
   try {
-    execSync(`"${JIRA_BIN}" init`, {
+    execSync(cmd, {
       stdio: "inherit",
-      env: { ...process.env, JIRA_API_TOKEN: token },
+      env: { ...process.env, JIRA_API_TOKEN: args.token },
     });
     console.log("\n✅ Setup complete!");
   } catch (e) {
     console.error("\n⚠️  'jira init' exited with error, but token is saved.");
-    console.error("    You can retry with: node scripts/setup.js");
+    console.error("    Check your parameters and retry.");
+    process.exit(1);
   }
-
-  rl.close();
 }
 
 main();
