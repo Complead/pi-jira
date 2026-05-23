@@ -7,7 +7,7 @@ Distributed as a pi package that installs [jira-cli](https://github.com/ankitpok
 ## Installation
 
 ```bash
-pi install @complead/pi-jira
+pi install git:github.com/Complead/pi-jira
 ```
 
 This downloads the `jira-cli` binary to `~/.pi-jira/bin/`.
