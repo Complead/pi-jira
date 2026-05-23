@@ -1,0 +1,13 @@
+{
+  "name": "@complead/pi-jira",
+  "version": "0.1.0",
+  "description": "Jira extension for pi — sprint management, issue tracking, time logging via jira-cli",
+  "keywords": ["pi-package"],
+  "pi": {
+    "skills": ["skills"]
+  },
+  "scripts": {
+    "postinstall": "node scripts/install-binary.js"
+  },
+  "license": "MIT"
+}
