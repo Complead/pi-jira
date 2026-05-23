@@ -14,13 +14,11 @@ This downloads the `jira-cli` binary to `~/.pi-jira/bin/`.
 
 ## First-time Setup
 
-```bash
-node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js
-```
+No manual setup needed! When you first ask pi anything about Jira, it will automatically detect that configuration is missing and guide you through the setup process.
 
 The setup will ask for:
 1. API token (from https://id.atlassian.com/manage-profile/security/api-tokens)
-2. Then launches `jira init` for server URL, email, project, board
+2. Jira server URL, email, project, board
 
 The token is stored locally in `~/.pi-jira/.token` — no global environment variables needed.
 
@@ -47,10 +45,7 @@ Once installed, pi will automatically use this tool when you ask about:
 Atlassian API tokens expire after **1 year**. When auth fails, regenerate at:
 https://id.atlassian.com/manage-profile/security/api-tokens
 
-Then run the setup again:
-```bash
-node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js
-```
+Then ask pi to reconfigure Jira (e.g. "перенастрой jira").
 
 ## Development
 
