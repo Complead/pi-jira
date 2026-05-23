@@ -7,25 +7,35 @@ description: Manage Jira issues — view sprint, list tasks, transition issues, 
 
 Manages Jira issues via [jira-cli](https://github.com/ankitpokhrel/jira-cli).
 
-## Binary
+## Binary & Wrapper
 
 The binary is installed at `~/.pi-jira/bin/jira` (or `jira.exe` on Windows).
+
+**All commands MUST be run through the wrapper** to inject the API token:
+
+```bash
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js <args>
+```
+
+The wrapper reads the token from `~/.pi-jira/.token` and sets `JIRA_API_TOKEN` env var automatically.
 
 ## First-time Setup
 
 If not configured yet, run:
 
 ```bash
-~/.pi-jira/bin/jira init
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js
 ```
 
 This will ask for:
-- Jira server URL (e.g. `https://adsensor-ru.atlassian.net`)
-- Login email
 - API token (from https://id.atlassian.com/manage-profile/security/api-tokens)
-- Default project (e.g. `AS`)
-- Default board
+- Then launches `jira init` which asks for:
+  - Jira server URL (e.g. `https://adsensor-ru.atlassian.net`)
+  - Login email
+  - Default project (e.g. `AS`)
+  - Default board
 
+Token is stored in `~/.pi-jira/.token` (isolated, not global env).
 Config is stored in `~/.config/.jira/.config.yml`
 
 ## Usage
@@ -33,49 +43,49 @@ Config is stored in `~/.config/.jira/.config.yml`
 ### Current sprint issues
 
 ```bash
-~/.pi-jira/bin/jira sprint list --current
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js sprint list --current
 ```
 
 ### My issues
 
 ```bash
-~/.pi-jira/bin/jira issue list --assignee "$(~/.pi-jira/bin/jira me)" --status "In Progress"
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue list --assignee "$(node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js me)" --status "In Progress"
 ```
 
 ### Search with JQL
 
 ```bash
-~/.pi-jira/bin/jira issue list --jql "project = \"AS\" AND sprint in openSprints()" --plain --columns key,summary,status,assignee
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue list --jql "project = \"AS\" AND sprint in openSprints()" --plain --columns key,summary,status,assignee
 ```
 
 ### View issue details
 
 ```bash
-~/.pi-jira/bin/jira issue view AS-7866 --plain
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue view AS-7866 --plain
 ```
 
 ### Move issue (transition)
 
 ```bash
-~/.pi-jira/bin/jira issue move AS-7866 "In Progress"
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue move AS-7866 "In Progress"
 ```
 
 ### Log time
 
 ```bash
-~/.pi-jira/bin/jira issue worklog add AS-7866 "2h" --comment "implemented feature X"
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue worklog add AS-7866 "2h" --comment "implemented feature X"
 ```
 
 ### Add comment
 
 ```bash
-~/.pi-jira/bin/jira issue comment add AS-7866 "Done, deployed to staging"
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue comment add AS-7866 "Done, deployed to staging"
 ```
 
 ### Create issue
 
 ```bash
-~/.pi-jira/bin/jira issue create --type Task --summary "New task title" --priority High
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue create --type Task --summary "New task title" --priority High
 ```
 
 ### Sprint stats (custom JQL)
@@ -83,7 +93,7 @@ Config is stored in `~/.config/.jira/.config.yml`
 To get sprint statistics, query all issues and count by status:
 
 ```bash
-~/.pi-jira/bin/jira issue list --jql "project = \"AS\" AND sprint in openSprints()" --plain --no-headers --columns status | sort | uniq -c | sort -rn
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue list --jql "project = \"AS\" AND sprint in openSprints()" --plain --no-headers --columns status | sort | uniq -c | sort -rn
 ```
 
 ## Flags Reference
