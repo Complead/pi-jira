@@ -2,13 +2,13 @@
 
 ## Overview
 
-`pi-jira` is a Jira extension for [pi](https://pi.dev). It installs [jira-cli](https://github.com/ankitpokhrel/jira-cli) and provides a pi skill for seamless sprint management, issue tracking, and time logging.
+`pi-jira` is a Jira integration for [pi](https://pi.dev) — sprint management, issue tracking, time logging via [jira-cli](https://github.com/ankitpokhrel/jira-cli). It's distributed as a pi package (skill + auto-installed binary).
 
-## Structure
+## Development
 
-- `skills/jira/SKILL.md` — pi skill definition
-- `scripts/install-binary.js` — downloads jira-cli binary on `pi install`
-- `package.json` — pi package manifest
+- Install dependencies: binary is auto-installed via `scripts/install-binary.js` on `npm install`
+- Test locally: `~/.pi-jira/bin/jira issue list --plain`
+- Release: tag with `vX.Y.Z` and push — GitHub Actions handles publishing
 
 ## Rules
 

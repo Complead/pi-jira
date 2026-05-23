@@ -19,6 +19,21 @@ node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js <args>
 
 The wrapper reads the token from `~/.pi-jira/.token` and sets `JIRA_API_TOKEN` env var automatically.
 
+## Auto-setup
+
+Before running any Jira command, check if `~/.pi-jira/.token` exists:
+
+```bash
+if [ ! -f "$HOME/.pi-jira/.token" ]; then echo "NOT_CONFIGURED"; fi
+```
+
+On Windows:
+```bash
+if not exist "%USERPROFILE%\.pi-jira\.token" echo NOT_CONFIGURED
+```
+
+If the file does not exist — run setup automatically (see First-time Setup below) and inform the user that first-time configuration is needed.
+
 ## First-time Setup
 
 If not configured yet, run:
