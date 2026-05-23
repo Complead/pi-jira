@@ -99,7 +99,22 @@ node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue comment ad
 ### Create issue
 
 ```bash
-node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue create --type Task --summary "New task title" --priority High
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue create --type Task --summary "New task title" --priority High --assignee "user@example.com"
+```
+
+### Edit issue
+
+**Always use `--no-input`** to avoid interactive prompts:
+
+```bash
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue edit AS-7866 --no-input --body "New description"
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue edit AS-7866 --no-input --summary "New title"
+```
+
+### Delete issue
+
+```bash
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue delete AS-7866
 ```
 
 ### Sprint stats (custom JQL)
@@ -121,8 +136,11 @@ node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue list --jql
 | `--project` | Override default project |
 | `--type` | Issue type: Task, Bug, Story, Sub-task |
 | `--priority` | Priority: Highest, High, Medium, Low, Lowest |
-| `--assignee` | Filter by assignee |
+| `--assignee` | Filter by assignee (or set assignee on create) |
 | `--status` | Filter by status |
+| `--no-input` | Non-interactive mode (required for `issue edit`) |
+| `--body` | Issue description (used with `issue edit --no-input`) |
+| `--summary` | Issue summary (used with `issue create` or `issue edit --no-input`) |
 
 ## Guidelines
 
