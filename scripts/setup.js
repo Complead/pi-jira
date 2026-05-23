@@ -39,12 +39,12 @@ function main() {
   }
 
   // Validate required params
-  const required = ["token", "server", "login", "project"];
+  const required = ["token", "server", "login", "project", "board"];
   const missing = required.filter((k) => !args[k]);
   if (missing.length > 0) {
     console.error(`❌ Missing required flags: ${missing.map((k) => "--" + k).join(", ")}`);
     console.error("\nUsage:");
-    console.error('  node setup.js --token <token> --server <url> --login <email> --project <key> [--board <name>]');
+    console.error('  node setup.js --token <token> --server <url> --login <email> --project <key> --board <name>');
     process.exit(1);
   }
 
@@ -58,9 +58,7 @@ function main() {
   cmd += ` --server "${args.server}"`;
   cmd += ` --login "${args.login}"`;
   cmd += ` --project "${args.project}"`;
-  if (args.board) {
-    cmd += ` --board "${args.board}"`;
-  }
+  cmd += ` --board "${args.board}"`;
 
   console.log("Running 'jira init'...\n");
   try {

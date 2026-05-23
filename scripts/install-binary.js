@@ -7,7 +7,7 @@ const path = require("path");
 const https = require("https");
 
 const REPO = "ankitpokhrel/jira-cli";
-const JIRA_CLI_VERSION = "1.5.2";
+const JIRA_CLI_VERSION = "1.7.0";
 const BIN_DIR = path.join(require("os").homedir(), ".pi-jira", "bin");
 const VERSION_FILE = path.join(BIN_DIR, ".version");
 

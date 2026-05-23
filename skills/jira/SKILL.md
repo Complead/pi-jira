@@ -21,18 +21,18 @@ The wrapper reads the token from `~/.pi-jira/.token` and sets `JIRA_API_TOKEN` e
 
 ## Auto-setup
 
-Before running any Jira command, check if `~/.pi-jira/.token` exists:
+Before running any Jira command, check if both files exist:
 
 ```bash
-if [ ! -f "$HOME/.pi-jira/.token" ]; then echo "NOT_CONFIGURED"; fi
+if [ ! -f "$HOME/.pi-jira/.token" ] || [ ! -f "$HOME/.config/.jira/.config.yml" ]; then echo "NOT_CONFIGURED"; fi
 ```
 
 On Windows:
 ```bash
-if not exist "%USERPROFILE%\.pi-jira\.token" echo NOT_CONFIGURED
+if [ ! -f "$USERPROFILE/.pi-jira/.token" ] || [ ! -f "$USERPROFILE/.config/.jira/.config.yml" ]; then echo "NOT_CONFIGURED"; fi
 ```
 
-If the file does not exist — run setup automatically (see First-time Setup below) and inform the user that first-time configuration is needed.
+If either file does not exist — run setup automatically (see First-time Setup below) and inform the user that first-time configuration is needed.
 
 ## First-time Setup
 
@@ -41,12 +41,12 @@ If not configured, ask the user for:
 - Jira server URL (e.g. `https://adsensor-ru.atlassian.net`)
 - Login email
 - Default project key (e.g. `AS`)
-- Default board name (optional)
+- Default board name (e.g. `Development`)
 
 Then run:
 
 ```bash
-node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js --token <TOKEN> --server <URL> --login <EMAIL> --project <KEY> [--board <BOARD>]
+node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/setup.js --token <TOKEN> --server <URL> --login <EMAIL> --project <KEY> --board <BOARD>
 ```
 
 Token is stored in `~/.pi-jira/.token` (isolated, not global env).
