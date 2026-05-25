@@ -132,7 +132,10 @@ node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue list --jql
 | `--plain` | Plain text output (no colors/formatting) — use for parsing |
 | `--no-headers` | Omit column headers |
 | `--columns` | Comma-separated column names: key, summary, status, assignee, priority, type, created, updated |
-| `--jql` | Custom JQL query |
+| `--jql` | Custom JQL query (**without ORDER BY** — use `--order-by` instead) |
+| `--order-by` | Field to sort by (default: `created`) |
+| `--reverse` | Reverse sort order (default is DESC, so `--reverse` gives ASC) |
+| `--paginate` | Limit results, format: `<limit>` or `<from>:<limit>` (max 100) |
 | `--project` | Override default project |
 | `--type` | Issue type: Task, Bug, Story, Sub-task |
 | `--priority` | Priority: Highest, High, Medium, Low, Lowest |
@@ -146,6 +149,8 @@ node ~/.pi/agent/git/github.com/Complead/pi-jira/scripts/run.js issue list --jql
 
 - Always use `--plain` when processing output programmatically
 - Use `--plain --no-headers --columns` for clean parseable output
+- **Never put ORDER BY in `--jql`** — use `--order-by` and `--reverse` flags instead
+- Use `--paginate N` to limit results (default 100)
 - Quote JQL strings properly — escape inner quotes with backslash
 - When user says "мой спринт" or "мои задачи" — filter by current user
 - When user asks for stats — use JQL + count by status
